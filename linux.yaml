@@ -1,0 +1,75 @@
+---
+- name: Linux Server Health Check
+  hosts: your_server
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Check CPU usage
+      command: top -b -n 1 | grep "Cpu(s)" | awk '{print $2 + $4}'
+      register: cpu_usage
+      changed_when: false
+
+    - name: Check memory usage
+      command: free | grep Mem | awk '{print $3/$2 * 100.0}'
+      register: memory_usage
+      changed_when: false
+
+    - name: Check disk usage
+      command: df -h --output=avail / | tail -n 1
+      register: disk_usage
+      changed_when: false
+
+    - name: Check network utilization
+      command: iftop -t -s 1 -n -N
+      register: network_utilization
+      changed_when: false
+      failed_when: false
+      ignore_errors: true
+
+    - name: Review system logs
+      command: tail -n 10 /var/log/syslog
+      register: system_logs
+      changed_when: false
+
+    - name: Verify running services
+      systemd:
+        state: status
+        name: "{{ item }}"
+      loop:
+        - service1
+        - service2
+        - service3
+      register: service_status
+      changed_when: false
+
+    - name: Check process status
+      command: ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -n 10
+      register: process_status
+      changed_when: false
+
+    - name: Perform security updates
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version | int >= 20
+      changed_when: false
+
+    - name: Perform security updates
+      yum:
+        name: '*'
+        state: latest
+        security: yes
+      when: ansible_distribution == 'CentOS' and ansible_distribution_major_version | int >= 8
+      changed_when: false
+
+    - name: Verify backup status
+      # Add your backup verification tasks here
+
+    - name: Install monitoring agent
+      # Add tasks to install and configure a monitoring agent
+
+    - name: Check hardware health
+      # Add tasks to check hardware health
+
+
