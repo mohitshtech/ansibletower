@@ -63,13 +63,5 @@
       when: ansible_distribution == 'CentOS' and ansible_distribution_major_version | int >= 8
       changed_when: false
 
-    - name: Verify backup status
-      # Add your backup verification tasks here
-
-    - name: Install monitoring agent
-      # Add tasks to install and configure a monitoring agent
-
-    - name: Check hardware health
-      # Add tasks to check hardware health
-
+    
 
