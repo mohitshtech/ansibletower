@@ -1,6 +1,6 @@
 ---
 - name: Linux Server Health Check
-  hosts: your_server
+  hosts: all
   gather_facts: true
   become: true
 
