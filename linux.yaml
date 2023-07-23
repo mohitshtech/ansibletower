@@ -37,9 +37,9 @@
         state: status
         name: "{{ item }}"
       loop:
-        - service1
-        - service2
-        - service3
+        - auditd
+        - crond
+        - nginx
       register: service_status
       changed_when: false
 
@@ -48,20 +48,6 @@
       register: process_status
       changed_when: false
 
-    - name: Perform security updates
-      apt:
-        update_cache: yes
-        upgrade: dist
-      when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version | int >= 20
-      changed_when: false
-
-    - name: Perform security updates
-      yum:
-        name: '*'
-        state: latest
-        security: yes
-      when: ansible_distribution == 'CentOS' and ansible_distribution_major_version | int >= 8
-      changed_when: false
-
+    
     
 
